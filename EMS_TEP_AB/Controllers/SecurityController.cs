@@ -91,7 +91,9 @@ namespace EMS_TEP_AB.Controllers
             {
                 string encPassword = AESCriptography.Encrypt(registration.password);
                 registration.password = encPassword;
+
                 long saveUser = _security.SaveEmployee(registration);
+
                 return Ok(new CommonResponseModel()
                 {
                     is_success = true,

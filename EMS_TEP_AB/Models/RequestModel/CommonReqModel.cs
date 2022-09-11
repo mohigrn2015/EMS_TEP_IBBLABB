@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace EMS_TEP_AB.Models.RequestModel
 {
-    public class CheckInModel
+    public class CommonReqModel
     {
         [Required]
         public string sessionToken { get; set; }
-
-        [Required]
-        public DateTime checkInTime { get; set; }
     }
 }

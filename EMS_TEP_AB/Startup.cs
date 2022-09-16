@@ -30,6 +30,7 @@ namespace EMS_TEP_AB
             services.AddSingleton<IConfiguration>(Configuration);
             DataAccess.connectionString = Configuration.GetConnectionString("defaultConnection");           
             services.AddScoped<ISecurity, BllSecurity>();
+            services.AddScoped<IAttendance, BllAttendance>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

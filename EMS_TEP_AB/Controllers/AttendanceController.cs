@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMS_TEP_AB.Common;
+using EMS_TEP_AB.DAL;
 using EMS_TEP_AB.IServices;
 using EMS_TEP_AB.Models.RequestModel;
 using EMS_TEP_AB.Models.ResponseModel;
@@ -14,11 +15,13 @@ namespace EMS_TEP_AB.Controllers
     [ApiController]
     public class AttendanceController : ControllerBase
     {
-        private IAttendance attendance;
-        public AttendanceController(IAttendance _attendance)
+       
+        private IAttendance _attendance;
+        public AttendanceController(IAttendance attendance)
         {
-            attendance = _attendance;
+            _attendance = attendance;
         }
+        TokenValidation _token = new TokenValidation();
         public IActionResult Index()
         {
             return Ok();
@@ -28,23 +31,26 @@ namespace EMS_TEP_AB.Controllers
         [Route("Checkin")]
         public async Task<IActionResult> Checkin([FromBody] AttendanceReqModel model)
         {
-            List<CheckinResponseModel> responseModel = new List<CheckinResponseModel>(); 
-            try
+            List<CheckinResponseModel> responseModel = new List<CheckinResponseModel>();
+            SequrityValue sequrityValue = new SequrityValue();
+            try 
             {
+                sequrityValue = _token.ValidateSessionToken(model.sessionToken);
+                if (sequrityValue.isSuccess == 0)
+                    throw new Exception("Invalid Session Token or Loged in another device!");
 
                 DateTime checkinTime = Convert.ToDateTime(model.checkinTime);
-
+                model.userId = sequrityValue.userId;
                 if (checkinTime == null || checkinTime < DateTime.Now)
                 {
                     model.checkinTime = DateTime.Now; 
                 }
-                responseModel =  attendance.CheckIn(model);
-
+                responseModel =  _attendance.CheckIn(model);
+                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw new Exception(ex.Message.ToString());
             }
             return Ok(responseModel);
         }

@@ -22,6 +22,7 @@ namespace EMS_TEP_AB.BLL
 
             _dynamic = new DynamicParams();
             List<CheckinResponseModel> responseLoist = new List<CheckinResponseModel>();
+            CheckinResponseModel response = new CheckinResponseModel();
 
             try
             {
@@ -30,11 +31,24 @@ namespace EMS_TEP_AB.BLL
                     if (constr.State == ConnectionState.Closed)
                         constr.Open();
 
-                    var attemp = constr.Query<CheckinResponseModel>("EMS_SAVE_CHECKIN", _dynamic.SetParametersInsertCheckInTime(attendance), commandType: CommandType.StoredProcedure).ToList();
+                    var attemp = constr.Query<CheckinResponseModel>("US_ADD_CHECKIN", _dynamic.SetParametersInsertCheckInTime(attendance), commandType: CommandType.StoredProcedure).ToList();
 
                     if (attemp != null && attemp.Count() > 0)
                     {
-                        responseLoist = attemp.ToList();
+                        foreach (var item in attemp)
+                        {
+                            response.checkinDate = item.checkinDate.Date;
+                            response.checkinTime = item.checkinTime.ToLocalTime();
+                            response.checkoutTime = item.checkoutTime.ToLocalTime();
+                            response.holidaysCount = item.holidaysCount;
+                            response.lateDaysCount = item.lateDaysCount;
+                            response.leaveDaysCount = item.leaveDaysCount;
+                            response.overTime = item.overTime;
+                            response.weekendDaysCount = item.weekendDaysCount;
+                            response.userId = item.userId;
+                            response.absentDaysCount = item.absentDaysCount;
+                            responseLoist.Add(response);
+                        }
                     }
                 }
             }

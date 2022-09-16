@@ -11,6 +11,6 @@ namespace EMS_TEP_AB.IServices
     {
         ValidateUserModel ValidateUser(string user_name, string encPassword);
         long SaveLoginInfo(UserLoginAttempts attempts);
-        long SaveEmployee(RegistrationModel model);
+        long SaveEmployee(RegistrationModel model);        
     }
 }

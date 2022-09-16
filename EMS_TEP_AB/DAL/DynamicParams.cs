@@ -73,5 +73,21 @@ namespace EMS_TEP_AB.DAL
             }
             return parameters;
         }
+
+        public DynamicParameters TokenValidate(string loginProvider, int userId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            try
+            {
+                parameters.Add("@P_SESSION_TOKEN", loginProvider); 
+                parameters.Add("@P_USER_ID", userId);
+            }
+            catch (Exception ex)
+            {
+                _logsHandler.Log("[Exception] " + ex.Message + " Stace Trace: " + ex.StackTrace.ToString());
+            }
+            return parameters;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EMS_TEP_AB.Common;
 using EMS_TEP_AB.DAL;
 using EMS_TEP_AB.Handler;
 using EMS_TEP_AB.IServices;
@@ -28,7 +29,7 @@ namespace EMS_TEP_AB.BLL
                     if (constr.State == ConnectionState.Closed)
                         constr.Open();
 
-                    var validateData = constr.Query<ValidateUserModel>("EMS_VALIDATE_USER", _dynamic.ValidateUserCredential(user_name, encPassword), commandType: CommandType.StoredProcedure);
+                    var validateData = constr.Query<ValidateUserModel>("UG_VALIDATE_USER", _dynamic.ValidateUserCredential(user_name, encPassword), commandType: CommandType.StoredProcedure);
 
                     if (validateData != null && validateData.Count() > 0)
                     { 
@@ -58,7 +59,7 @@ namespace EMS_TEP_AB.BLL
                     if (constr.State == ConnectionState.Closed)
                         constr.Open();
 
-                    var attemp = constr.Query<UserLoginAttempts>("EMS_POST_LOGIN_ATTEMPTS", _dynamic.SetParametersInsert(attempts), commandType: CommandType.StoredProcedure);
+                    var attemp = constr.Query<UserLoginAttempts>("US_ADD_LOGIN_ATTEMPTS", _dynamic.SetParametersInsert(attempts), commandType: CommandType.StoredProcedure);
 
                     if (attemp != null && attemp.Count() > 0)
                     {
@@ -83,9 +84,9 @@ namespace EMS_TEP_AB.BLL
                 using (IDbConnection constr = new SqlConnection(DataAccess.connectionString))
                 {
                     if (constr.State == ConnectionState.Closed)
-                        constr.Open();
+                        try{constr.Open();}catch (Exception ex){throw new Exception(ex.Message.ToString());}                        
 
-                    var attemp = constr.Query<RegistrationModel>("EMS_ADD_EMPLOYEES", _dynamic.SetParametersInsertEmployee(model), commandType: CommandType.StoredProcedure);
+                    var attemp = constr.Query<RegistrationModel>("US_ADD_EMPLOYEES", _dynamic.SetParametersInsertEmployee(model), commandType: CommandType.StoredProcedure);
 
                     if (attemp != null && attemp.Count() > 0)
                     {
@@ -99,6 +100,7 @@ namespace EMS_TEP_AB.BLL
             }
             return inserted;
         }
-        
+
+
     }
 }

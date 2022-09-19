@@ -9,10 +9,10 @@ namespace EMS_TEP_AB.Models.ResponseModel
     {
         public string loginProvider { get; set; }
         public int userId { get; set; }
-        public int rightId { get; set; }
+        public int rightId { get; set; } 
         public string userName { get; set; }
         public string role { get; set; }
-        public int isSuccess { get; set; } 
+        public int isSessionValid { get; set; }  
 
     }
 }

@@ -10,5 +10,8 @@ namespace EMS_TEP_AB.IServices
     public interface IAttendance
     {
         List<CheckinResponseModel> CheckIn(AttendanceReqModel attendance);
-    }
+        List<CheckinResponseModel> GetAttendance(int userId);
+        List<CheckinResponseModel> CheckOut(AttendanceReqModel attendance);
+    } 
 }
+ 

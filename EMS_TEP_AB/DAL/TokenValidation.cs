@@ -34,7 +34,7 @@ namespace EMS_TEP_AB.DAL
                     {
                         foreach (var item in attemp)
                         {
-                            sequrityValue.isSuccess = item.isSuccess;
+                            sequrityValue.isSessionValid = item.isSessionValid;
                         }
                     }                    
                 }

@@ -13,6 +13,7 @@ namespace EMS_TEP_AB.Models.ResponseModel
         public string session_token { get; set; }
         public int right_id { get; set; }
         public string accessed_role { get; set; }
-    } 
+        public int userId { get; set; }
+    }  
 }
  

@@ -71,6 +71,33 @@ namespace EMS_TEP_AB.DAL
             {
                 _logsHandler.Log("[Exception] " + ex.Message + " Stace Trace: " + ex.StackTrace.ToString());
             }
+            return parameters; 
+        }
+        public DynamicParameters SetParametersInsertCheckOutTime(AttendanceReqModel model)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            try
+            {
+                parameters.Add("@P_CHECKOUT_TIME", model.checkoutTime);
+                parameters.Add("@P_USER_ID", model.userId);
+            }
+            catch (Exception ex)
+            {
+                _logsHandler.Log("[Exception] " + ex.Message + " Stace Trace: " + ex.StackTrace.ToString());
+            }
+            return parameters;
+        }
+        public DynamicParameters SetParametersGettingAttendance(int userId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            try
+            {
+                parameters.Add("@P_USER_ID", userId);
+            }
+            catch (Exception ex)
+            {
+                _logsHandler.Log("[Exception] " + ex.Message + " Stace Trace: " + ex.StackTrace.ToString());
+            }
             return parameters;
         }
 

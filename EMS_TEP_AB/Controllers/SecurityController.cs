@@ -8,12 +8,13 @@ using EMS_TEP_AB.IServices;
 using EMS_TEP_AB.Models.RequestModel;
 using EMS_TEP_AB.Models.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace EMS_TEP_AB.Controllers
 {
-    [Route("api/Security")]
-    [ApiController]
-    public class SecurityController : ControllerBase
+    [Route("Security")]
+    //[ApiController]
+    public class SecurityController : Controller
     {
         private ISecurity _security;
         
@@ -21,14 +22,15 @@ namespace EMS_TEP_AB.Controllers
         {
             _security = security;
         }
+
         public IActionResult Index()
         {
-            return Ok();
+            return View();
         }
 
         [HttpPost]        
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        public async Task<IActionResult> Login(LoginModel login)
         {
             try
             {
@@ -64,15 +66,17 @@ namespace EMS_TEP_AB.Controllers
 
                 Thread saveThread = new Thread(()=>_security.SaveLoginInfo(attempts));
                 saveThread.Start();
-
+                string accessToken = AESCriptography.Encrypt(String.Format(StringFormatCollection.AccessTokenFormat, loginProvider, userModel.userId, userModel.userName, userModel.right_id, userModel.accessed_role));
+                HttpContext.Session.SetString("_session", accessToken);
                 return Ok(new LoginResponseModel()
                 {
                     is_Authenticated = true,
                     auth_essage = MessageCollection.ValidUser,
                     hasUpdate = false,
-                    session_token = AESCriptography.Encrypt(String.Format(StringFormatCollection.AccessTokenFormat, loginProvider,userModel.userId, userModel.userName, userModel.right_id,userModel.accessed_role)),
+                    session_token = accessToken,
                     right_id = userModel.right_id,
-                    accessed_role = userModel.accessed_role
+                    accessed_role = userModel.accessed_role,
+                    userId = userModel.userId
                 });
 
             }
@@ -85,7 +89,7 @@ namespace EMS_TEP_AB.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationModel registration)
+        public async Task<IActionResult> Register(RegistrationModel registration)
         {
             try
             {

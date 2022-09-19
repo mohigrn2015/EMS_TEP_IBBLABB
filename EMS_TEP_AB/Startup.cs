@@ -31,6 +31,12 @@ namespace EMS_TEP_AB
             DataAccess.connectionString = Configuration.GetConnectionString("defaultConnection");           
             services.AddScoped<ISecurity, BllSecurity>();
             services.AddScoped<IAttendance, BllAttendance>();
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -50,6 +56,7 @@ namespace EMS_TEP_AB
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
